@@ -18,10 +18,10 @@
 #' and will not be animated.
 #'
 #' @examples
-#' gif_random("cat")
+#' gif_trending()
 #'
 #' @export
-gif_random <- function(limit = 10, offset = 0, rating = "g",
+gif_trending <- function(limit = 10, offset = 0, rating = "g",
                        img_format = c(
                          "fixed_height", "fixed_height_still",
                          "fixed_height_downsampled", "fixed_width",
@@ -57,13 +57,12 @@ gif_random <- function(limit = 10, offset = 0, rating = "g",
     ), several.ok = TRUE
   )
 
-  random_api_path <- "/v1/gifs/random"
+  tranding_api_path <- "/v1/gifs/trending"
 
   search_raw <- GET(
     url = .giphy_url(),
-    path = random_api_path,
+    path = tranding_api_path,
     query = list(
-      q = search_query_parser(query),
       limit = limit,
       offset = offset,
       rating = rating,
@@ -93,38 +92,3 @@ gif_random <- function(limit = 10, offset = 0, rating = "g",
 
   return(out)
 }
-
-
-gif_url <- function(images) {
-  images <- images[which(names(images) %in% c(
-    "fixed_height", "fixed_height_still", "fixed_height_downsampled",
-    "fixed_width", "fixed_width_still", "fixed_width_downsampled",
-    "fixed_height_small", "fixed_height_small_still", "fixed_width_small",
-    "fixed_width_small_still", "downsized", "downsized_still",
-    "downsized_large", "downsized_medium", "original",
-    "original_still","preview_gif"
-  ))]
-  out <- lapply(images, function(x) {
-    if ("url" %in% names(x)) {
-      x[[which(names(x) == "url")]]
-    }
-  })
-  return(out)
-}
-
-mp4_url <- function(images) {
-  mp4_variables <- c(
-    "fixed_height", "fixed_width", "fixed_height_small", "fixed_width_small",
-    "original", "looping", "preview", "downsized_small"
-  )
-  images <- images[which(names(images) %in% mp4_variables)]
-  out <- lapply(images, function(x) {
-    if ("mp4" %in% names(x)) {
-      x[[which(names(x) == "mp4")]]
-    }
-  })
-  names(out) <- paste0(mp4_variables, "_mp4")
-  return(out)
-}
-
-
